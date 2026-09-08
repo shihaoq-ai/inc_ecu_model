@@ -1,0 +1,10 @@
+package example.consumer
+
+import example.shared.library.* from "imported_definition_fqn.fdepl"
+import network.* from "resolve_use_specification.fdepl"
+import example.types.* from "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.FullyQualifiedName {
+    use deployments.Reusable
+    use example.shared.library.deployments.Reusable
+}

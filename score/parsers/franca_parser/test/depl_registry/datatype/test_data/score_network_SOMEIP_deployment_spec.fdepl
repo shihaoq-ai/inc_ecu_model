@@ -1,0 +1,204 @@
+package network
+import "score_architecture_deployment_spec.fdepl"
+specification someip extends system.architecture {
+    for event_groups {
+        ScoreProperty105: Integer;
+    }
+    for provided_port_eventgroups {
+        ScoreProperty449:                       Integer     (default: 42);
+        ScoreProperty408:      Integer     (default: 42);
+        ScoreProperty407:      Integer     (default: 42);
+        ScoreProperty409:                          Integer     (default: 42);
+    }
+    for required_port_eventgroups {
+        ScoreProperty396:  Integer     (default: 42);
+        ScoreProperty395:  Integer     (default: 42);
+        ScoreProperty397:                      Integer     (default: 42);
+    } 
+    for provided_ports {
+        ScoreProperty416:            Integer                         ;
+        ScoreProperty464:   Integer                         (default: 42);
+        ScoreProperty474: Integer                         (default: 42);
+        ScoreProperty331:                Integer                     (default: 42);
+        ScoreProperty275:             Integer                     (default: 42);
+        ScoreProperty239:         Integer                     (default: 42);
+        ScoreProperty238:         Integer                     (default: 42);
+        ScoreProperty240:  Integer                     (default: 42);
+        ScoreProperty241:          Integer                     (default: 42);
+        ScoreProperty401:    	{ScoreValue026}                    (default: ScoreValue026);
+        ScoreProperty034:							Integer						(optional);
+		ScoreProperty473: {ScoreValue038, ScoreValue202, ScoreValue109}		 (default: ScoreValue038);
+		ScoreProperty312:		Integer						(default: 42);
+		ScoreProperty311:		Integer						(default: 42);
+		 ScoreProperty394:	Boolean						(default: true);
+        ScoreProperty466:           Integer         (default: 42);
+        ScoreProperty467:           Integer         (default: 42);
+        ScoreProperty472:          Integer         (default: 42);
+        ScoreProperty468: Integer     (default: 42);
+         ScoreProperty465:       Integer     (default: 42);
+         ScoreProperty471:        Integer     (default: 42);
+         ScoreProperty470:        Integer     (default: 42);
+         ScoreProperty469:                  Integer     (default: 42);
+    }
+	for required_ports {
+		ScoreProperty319:	Integer							(optional);
+		ScoreProperty384:	 Integer[]                      (optional);
+		ScoreProperty383:		Integer[]					(optional);
+		ScoreProperty382:		Integer[]					(optional);
+		ScoreProperty386:    Integer					(optional);
+		ScoreProperty393:  Integer					(optional);
+		ScoreProperty385:   Integer						(optional);
+        ScoreProperty402: Boolean                 (default: false);
+        ScoreProperty411:             String[]                (optional);
+        ScoreProperty419:              Integer[]               (optional);
+        ScoreProperty388:                      Integer (default: 42);
+        ScoreProperty389:     Integer             (default: 42);
+        ScoreProperty390:     Integer             (default: 42);
+        ScoreProperty392:    Integer             (default: 42);
+        ScoreProperty391:   Integer (default: 42);
+         ScoreProperty387:         Integer  (default: 42);
+    }
+    for adapters {
+		ScoreProperty344:        String                          (default: "score_value");
+		ScoreProperty261:      Boolean						(default: true);
+    }
+    for application_endpoints {
+         ScoreProperty299:   Integer                 (optional);
+    }
+    for interfaces {
+        ScoreProperty475:             Integer                         ;
+        ScoreProperty443:  Integer[]                       (optional);
+        ScoreProperty442:    String[]                        (optional);
+        ScoreProperty446:        Integer[]                       (optional);
+        ScoreProperty445:  Integer[]		 (optional);
+        ScoreProperty444:  Integer[]		 (optional);
+        ScoreProperty449:			Integer					(default: 42);
+        ScoreProperty448:	Integer					(default: 42);
+        ScoreProperty447:	Integer					(default: 42);
+        ScoreProperty308:			Integer					(default: 42);
+        ScoreProperty307:			Integer					(default: 42);
+    }
+	for attributes {
+        ScoreProperty348: Integer    (optional);
+		ScoreProperty351:    {ScoreValue032, ScoreValue010}                        (default: ScoreValue010);
+		ScoreProperty350:     {ScoreValue067, ScoreValue159, ScoreValue086}               (default: ScoreValue067);
+		ScoreProperty356: { ScoreValue052, ScoreValue242, ScoreValue230 }		 (default: ScoreValue242);
+		ScoreProperty359:		 Integer				 (default: 42);
+  		ScoreProperty360:		 Integer				(default: 42);
+        ScoreProperty349:				Integer					(optional);
+        ScoreProperty479:   Integer      (default: 42);
+	}
+    for attribute_getters {
+        ScoreProperty414:              Integer                         (optional);
+        ScoreProperty415:		 Integer			(default: 42);
+		ScoreProperty412:			Integer				(default: 42);
+		ScoreProperty413:				Integer				(default: 42);
+        ScoreProperty352:       Integer     (default: 42);
+        ScoreProperty353:      Integer     (default: 42);
+    }
+    for attribute_setters {
+        ScoreProperty477:              Integer                         	(optional);
+		ScoreProperty476:			Integer				(default: 42);
+        ScoreProperty478:		 Integer						(default: 42);
+        ScoreProperty357:       Integer             (default: 42);
+        ScoreProperty358:      Integer             (default: 42);
+    }
+    for attribute_notifiers {
+        ScoreProperty460:            Integer                         (optional);
+        ScoreProperty459:	 Integer[]                       (optional);
+        ScoreProperty461:		 Integer				(default: 42);
+		ScoreProperty452:			Integer				(default: 42);
+		ScoreProperty453:			Integer				(default: 42);
+        ScoreProperty354:     Integer     (default: 42);
+        ScoreProperty355:    Integer     (default: 42);
+        ScoreProperty455:        {ScoreValue036, ScoreValue172, ScoreValue176, ScoreValue178, ScoreValue180, ScoreValue182}    (default: ScoreValue036);
+        ScoreProperty456:        Integer            (optional);
+        ScoreProperty457:		Integer				(optional);
+	    ScoreProperty451:		Integer						(optional);
+        ScoreProperty458: Boolean		(default: false);	    
+        ScoreProperty450:    Integer                             (optional);
+        ScoreProperty454: {ScoreValue036, ScoreValue171, ScoreValue175, ScoreValue177, ScoreValue179, ScoreValue181 }   (default: ScoreValue036);
+        ScoreProperty462: {ScoreValue050, ScoreValue241} (default: ScoreValue241);
+    }
+    for methods {
+        ScoreProperty427:              Integer                         ;
+		ScoreProperty430: { ScoreValue052, ScoreValue242, ScoreValue230 }		 (default: ScoreValue242);
+  		ScoreProperty437:  Integer							(default: 42);
+        ScoreProperty438: Integer                 (optional);
+        ScoreProperty440: Integer         (optional);
+        ScoreProperty426:           {ScoreValue026}					(default: ScoreValue026);
+		ScoreProperty425:       {ScoreValue032, ScoreValue010}                        (default: ScoreValue010);
+        ScoreProperty422:        {ScoreValue067, ScoreValue159, ScoreValue086}               (default: ScoreValue067);
+        ScoreProperty428:		 Integer				(default: 42);
+        ScoreProperty421:				Integer					(optional);
+		ScoreProperty423:			Integer				(default: 42);
+		ScoreProperty424:			Integer				(default: 42);
+        ScoreProperty435: Integer                (default: 42);
+        ScoreProperty436: Integer                        (default: 42);
+        ScoreProperty439: Integer (default: 42);
+        ScoreProperty441: Integer     (default: 42);
+        ScoreProperty431: Integer     (default: 42);
+        ScoreProperty432: Integer    (default: 42);
+        ScoreProperty434: {ScoreValue050, ScoreValue241} (default: ScoreValue241);
+        ScoreProperty433: Integer    (default: 42);
+        ScoreProperty420: Integer    (default: 42);
+        ScoreProperty429: Integer    (default: 42);
+    }
+    for broadcasts {
+        ScoreProperty410:               Integer                         ;
+		ScoreProperty376: { ScoreValue052, ScoreValue242, ScoreValue230 }		 (default: ScoreValue242);
+		ScoreProperty378:		 Integer					(default: 42);
+  		ScoreProperty379:		 Integer				(default: 42);
+        ScoreProperty375:              Integer					(optional);
+        ScoreProperty373:           Integer[]                       (optional);
+        ScoreProperty406: Integer[]                       (optional);
+        ScoreProperty372:    {ScoreValue032, ScoreValue010}                        (default: ScoreValue010);
+        ScoreProperty363:     {ScoreValue067, ScoreValue159, ScoreValue086}               (default: ScoreValue067);
+        ScoreProperty374:		 Integer			(default: 42);
+		ScoreProperty365:			Integer				(default: 42);
+		ScoreProperty366:			Integer					(default: 42);
+        ScoreProperty368:        {ScoreValue036, ScoreValue172, ScoreValue176, ScoreValue178, ScoreValue180, ScoreValue182}    (default: ScoreValue036);
+        ScoreProperty369:        Integer            (optional);
+        ScoreProperty370:		Integer				(optional);
+          ScoreProperty398:		Integer							(optional);
+        ScoreProperty361:				Integer					(optional);
+        ScoreProperty371: Boolean		(default: false); 
+        ScoreProperty273:               Integer              (optional);
+        ScoreProperty367: {ScoreValue036, ScoreValue171, ScoreValue175, ScoreValue177, ScoreValue179, ScoreValue181 }  (default: ScoreValue036);
+        ScoreProperty362:    Integer                             (optional);
+        ScoreProperty364: Integer (default: 42);
+        ScoreProperty377: {ScoreValue050, ScoreValue241} (default: ScoreValue241);
+    }
+    for arrays {
+        ScoreProperty347:        Integer                         (default: 42);
+        ScoreProperty346:        Integer                         (default: 42);
+        ScoreProperty345:      Integer                         (default: 42);
+    }
+    for unions {
+        ScoreProperty485:      Integer                         (optional);
+        ScoreProperty487:        Integer                         (optional);
+        ScoreProperty484:     Boolean                         (optional);
+        ScoreProperty486:        Integer                         (optional);
+    }
+    for structs {
+        ScoreProperty483:     Integer                         (default: 42);
+    }
+    for enumerations {
+        ScoreProperty405:             Integer                         (default: 42);
+        ScoreProperty403:          Integer                         (optional);
+        ScoreProperty404:		 Integer						 (optional);
+    }
+    for strings {
+        ScoreProperty481:          Integer                         (default: 42);
+        ScoreProperty482:     Integer                         (default: 42);
+        ScoreProperty480: {ScoreValue064, ScoreValue244, ScoreValue243, ScoreValue110, ScoreValue236} (optional);
+    }
+    for byte_buffers {
+        ScoreProperty380:   Integer                        (default: 42);    
+        ScoreProperty381:   Integer                        (default: 42);
+    }
+    for integers {
+        ScoreProperty417: Integer (optional);
+        ScoreProperty418: Integer (optional);
+    }
+}

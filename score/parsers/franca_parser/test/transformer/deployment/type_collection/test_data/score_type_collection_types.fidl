@@ -1,0 +1,32 @@
+package ipnext.cvdn.cv_minion.v1_0
+
+typeCollection TypeCollectionSkyLandmarks {
+    struct TextMetadata {
+        String Source
+    }
+
+    struct OCRText {
+        String Character
+        String ErrorCategory
+        TextMetadata Metadata
+        Payload PayloadValue
+    }
+
+    union Payload {
+        String text
+    }
+
+    typedef DisplayText is String
+
+    array byteArray of UInt8
+
+    map MetaInfoType {
+        DisplayText to OCRText
+    }
+
+    enumeration SeverityEnum {
+        Info
+        Warning
+        Error
+    }
+}

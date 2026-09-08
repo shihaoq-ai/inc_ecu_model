@@ -1,0 +1,109 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// https://www.apache.org/licenses/LICENSE-2.0
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
+
+// ************************************************************************************************
+// TEMPLATES FOR COMMON ELEMENTS
+
+// Each franca model starts with the definition of the package name, followed by import statements
+// and the model element definitions
+_imported_fqn{fqn}:                 fqn ".*"?
+
+_import{imported_fqn}:              "import"  [imported_fqn "from" | "model"] f_import_uri
+                                            | ("namespace" imported_fqn)
+
+_id_with_selector{valid_id}:        valid_id (":" valid_id)?
+_fully_qualified_name{valid_id}:    valid_id ("." valid_id)*
+
+_valid_id{keywords_enum}:           ("^" keywords_enum) | SIMPLE_NAME
+
+f_import_uri:   ESCAPED_STRING
+
+// ************************************************************************************************
+// Franca comments
+
+// unstructured comments (Franca uses C/C++ style)
+CPP_COMMENT:        /\/\/[^\n]*/
+C_COMMENT:          "/*" /(.|\n)*?/ "*/"
+
+// version spec
+f_version:          "{" "major" E_INTEGER "minor" E_INTEGER "}"
+
+// structured comments
+f_annotation_block: "<**" f_annotation+ "**>"
+f_annotation:       ANNOTATION_STRING
+
+// FIDL/DEPL annotation terminal: whole @tag : value as single flat token
+// Tag chars: a-z, dash, underscore; colon is mandatory
+ANNOTATION_STRING: \
+    "@" ("a".."z"|"-"|"_")+ (" "|/\t/)* ANNOTATION_VALUE
+
+// Annotation value: colon followed by escaped/unescaped content (shared by all)
+ANNOTATION_VALUE: \
+    ":" ( ("\\" ("b"|"t"|"n"|"f"|"r"|"u"|"\""|"'"|"\\")) | ("\\*"|"\\@") | /[^\\*@]/ )*
+
+// FCDL/FSDL annotation tag terminal
+ANNOTATION_TAG_ID: \
+    "@" ("a".."z"|"A".."Z") ("a".."z"|"A".."Z"|"0".."9")*
+
+ANNO_CONTINUED: "**"
+
+// ************************************************************************************************
+// PRIMITIVE DATA TYPES
+
+// Numbers
+DIGIT:              "0".."9"
+HEXDIGIT:           "a".."f"|"A".."F"|DIGIT
+BINDIGIT:           "0"|"1"
+
+E_BOOLEAN.1:        "false" | "true"
+
+E_INTEGER:          DIGIT+
+E_SIGNED_INTEGER:   ["+"|"-"] E_INTEGER
+E_BIGINTEGER:       E_INTEGER | HEX | BINARY
+
+_EXP:               ("e"|"E") E_SIGNED_INTEGER
+E_SIGNED_DECIMAL:   E_SIGNED_INTEGER ("." E_INTEGER (_EXP)?)?
+
+E_DOUBLE:           E_SIGNED_DECIMAL "d"
+E_FLOAT:            E_SIGNED_DECIMAL "f"
+
+DECIMAL:            (E_INTEGER ("." E_INTEGER)?) | ("." E_INTEGER)
+FLOAT:              (E_INTEGER _EXP) | (DECIMAL _EXP?)
+SIGNED_FLOAT:       ["+"|"-"] FLOAT
+
+NUMBER:             FLOAT | E_INTEGER
+SIGNED_NUMBER:      ["+"|"-"] NUMBER
+
+HEX:                ("0x"|"0X") HEXDIGIT+
+BINARY:             ("0b"|"0B") BINDIGIT+
+
+// Characters and Strings
+_STRING_INNER:      /.*?/
+_STRING_ESC_INNER:  _STRING_INNER /(?<!\\)(\\\\)*?/
+
+ESCAPED_STRING:     "'" _STRING_ESC_INNER "'" | "\"" _STRING_ESC_INNER "\""
+
+LCASE_LETTER:       "a".."z"
+UCASE_LETTER:       "A".."Z"
+
+LETTER:             UCASE_LETTER | LCASE_LETTER
+WORD:               LETTER+
+
+SIMPLE_NAME:        "^"? ("_"|LETTER) ("_"|LETTER|DIGIT)*
+
+// Whitespace, newline, etc.
+WS_INLINE:          (" "|/\t/)+
+WS:                 /[ \t\f\r\n]/+
+CR :                /\r/
+LF :                /\n/
+NEWLINE:            (CR? LF)+

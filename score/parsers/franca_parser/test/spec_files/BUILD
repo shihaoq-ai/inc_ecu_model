@@ -10,11 +10,22 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
+filegroup(
+    name = "ipc",
+    srcs = [
+        "score_architecture_deployment_spec.fdepl",
+        "score_network_IPC_deployment_spec.fdepl",
+    ],
     visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
+)
+
+filegroup(
+    name = "someip",
+    srcs = [
+        "score_architecture_deployment_spec.fdepl",
+        "score_network_SOMEIP_deployment_spec.fdepl",
+        "score_network_ethernet_deployment_spec.cdepl",
+    ],
+    visibility = ["//visibility:public"],
 )

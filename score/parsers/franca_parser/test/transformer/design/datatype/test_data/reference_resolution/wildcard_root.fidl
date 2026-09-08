@@ -1,0 +1,19 @@
+package example.wildcard
+
+import example.shared.* from "shared_types.fidl"
+import example.anonymous.* from "anonymous_types.fidl"
+
+typeCollection WildcardRootTypes {
+    struct LocalEnvelope {
+        LocalPayload local_payload
+        SharedTypes.SharedPayload shared_payload
+        example.shared.SharedTypes.SharedPayload fully_qualified_payload
+        shared.SharedTypes.SharedPayload overlapping_payload
+        AnonymousPayload anonymous_payload
+        example.anonymous.AnonymousPayload fully_qualified_anonymous_payload
+    }
+
+    struct LocalPayload {
+        SharedState state
+    }
+}

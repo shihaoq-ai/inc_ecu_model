@@ -1,0 +1,8 @@
+package example.franca.invalid
+
+import example.franca.missing.* from "missing_types.fidl"
+
+typeCollection InvalidTypes {
+    struct InvalidValue {
+    }
+}

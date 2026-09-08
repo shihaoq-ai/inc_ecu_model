@@ -1,0 +1,11 @@
+package example.shared
+
+typeCollection SharedTypes {
+    struct SharedPayload {
+        UInt32 identifier
+    }
+
+    enumeration SharedState {
+        Ready
+    }
+}

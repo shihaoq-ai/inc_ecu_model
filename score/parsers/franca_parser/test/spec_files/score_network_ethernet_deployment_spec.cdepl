@@ -1,0 +1,42 @@
+package network
+import "score_architecture_deployment_spec.fdepl"
+specification ethernet extends system.architecture {
+    for network_endpoints {
+        ScoreProperty091: {ScoreValue253, ScoreValue254, ScoreValue099, ScoreValue008, ScoreValue162}  (default: ScoreValue253);
+        ScoreProperty096: String  (optional);
+        ScoreProperty095: String  (optional);
+        ScoreProperty099: Integer (optional); 
+        ScoreProperty101: String    (optional);
+        ScoreProperty094: String    (optional);
+        ScoreProperty100: Integer  (optional);
+        ScoreProperty102: String    (optional);
+        ScoreProperty097: String   (optional);
+        ScoreProperty089: {ScoreValue025, ScoreValue047, ScoreValue004}    (optional);
+        ScoreProperty090: {ScoreValue025, ScoreValue047, ScoreValue004, ScoreValue130}    (optional);
+        ScoreProperty092: String (optional);
+        ScoreProperty093: Integer (optional);
+        ScoreProperty098: Integer (optional);
+    }
+    for application_endpoints {
+        ScoreProperty104: {ScoreValue060, ScoreValue220};
+        ScoreProperty103: Integer  (optional);
+        ScoreProperty087: Boolean  (optional);
+        ScoreProperty088: Boolean  (optional);
+        ScoreProperty081:  {ScoreValue044, ScoreValue098, ScoreValue058, ScoreValue055, ScoreValue095, ScoreValue096, ScoreValue201, ScoreValue147}          (optional);
+        ScoreProperty080: String                            (optional);
+        ScoreProperty083:   Integer                             (optional);
+        ScoreProperty078: Integer                    (optional);
+        ScoreProperty082:  {ScoreValue007, ScoreValue056, ScoreValue057, ScoreValue059, ScoreValue060, ScoreValue061, ScoreValue062, ScoreValue143, ScoreValue147, ScoreValue201}   (optional);
+        ScoreProperty084: {ScoreValue038, ScoreValue109}        (optional);
+        ScoreProperty079: {ScoreValue040, ScoreValue103, ScoreValue104, ScoreValue164}	(optional);
+    }
+    for adapters {
+        ScoreProperty075: Integer (default: 42);
+        ScoreProperty076: {ScoreValue042, ScoreValue162}   (default: ScoreValue042);
+        ScoreProperty077: Integer    (default: 42);     
+    }
+    for channels {
+        ScoreProperty086: String  (optional);
+        ScoreProperty085:   Integer (optional); 
+    }
+}

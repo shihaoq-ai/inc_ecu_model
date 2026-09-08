@@ -1,0 +1,48 @@
+package network
+import "score_architecture_deployment_spec.fdepl"
+specification ipc extends system.architecture {
+	for interfaces {
+		ScoreProperty260:						{ScoreValue013, ScoreValue251}			(default: ScoreValue013);
+		ScoreProperty253:			Integer						    (optional);
+        ScoreProperty258:                   Integer                         (optional);
+	}
+	for provided_ports {
+		ScoreProperty252:						Integer						;
+		ScoreProperty249:							Integer						(default: 42);
+		ScoreProperty257:							Integer						(default: 42);
+        ScoreProperty279:       String                      (optional);
+        ScoreProperty278: String                      (optional);
+        ScoreProperty489:     Integer                     (default: 42);
+        ScoreProperty262:      Integer                   (default: 42);
+        ScoreProperty107:          {ScoreValue001, ScoreValue009, ScoreValue010, ScoreValue030, ScoreValue183}              (default: ScoreValue183);
+	}
+	for required_ports {
+		ScoreProperty316:				Integer						(optional);
+		ScoreProperty281:       String                      (optional);
+        ScoreProperty280: String                      (optional);
+        ScoreProperty503:                     Boolean                     (default: false);
+        ScoreProperty108:          {ScoreValue001, ScoreValue009, ScoreValue010, ScoreValue030, ScoreValue183}              (default: ScoreValue183);
+	}
+	for arrays {
+        ScoreProperty247:        Integer                         (default: 42);
+        ScoreProperty246:        Integer                         (default: 42);
+        ScoreProperty245:      Integer                         (default: 42);
+    }
+	for broadcasts {
+        ScoreProperty250:                  Integer                         (optional);
+        ScoreProperty509:      {ScoreValue037, ScoreValue025}     (optional);
+        ScoreProperty507:          {ScoreValue001, ScoreValue009, ScoreValue010, ScoreValue030, ScoreValue183}[]              (optional);
+        ScoreProperty510:          Integer[]                       (optional);
+        ScoreProperty508:    Integer[]                       (optional);
+        ScoreProperty002: {ScoreValue056, ScoreValue029}  (default: ScoreValue056);
+    }
+    for methods {
+        ScoreProperty004:      String                          (optional);
+        ScoreProperty255:               Integer                         (optional);
+    }
+	for attributes {
+        ScoreProperty251:             Integer                         (optional);
+        ScoreProperty259:             Integer                         (optional);
+        ScoreProperty256:           Integer                         (optional);
+    }
+}

@@ -1,0 +1,10 @@
+package example.root
+
+import example.shared.* from "left_types.fidl"
+import example.shared.* from "right_types.fidl"
+
+typeCollection RootTypes {
+    struct RootPayload {
+        SharedPayload payload
+    }
+}

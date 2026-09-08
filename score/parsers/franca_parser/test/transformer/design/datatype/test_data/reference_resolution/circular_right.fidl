@@ -1,0 +1,9 @@
+package example.circular.right
+
+import "circular_left.fidl"
+
+typeCollection RightTypes {
+    struct RightPayload {
+        LeftTypes.LeftPayload left
+    }
+}

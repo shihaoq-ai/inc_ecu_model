@@ -1,0 +1,9 @@
+package example.franca.cycle
+
+import example.franca.cycle.* from "left_cycle.fidl"
+
+typeCollection RightTypes {
+    struct RightValue {
+        LeftTypes.LeftValue leftValue
+    }
+}

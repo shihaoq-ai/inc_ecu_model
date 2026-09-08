@@ -1,0 +1,33 @@
+package example.deployment
+
+import "datatype_properties.fidl"
+import "score_network_SOMEIP_deployment_spec.fdepl"
+
+define network.someip for typeCollection example.deployment.DeploymentTypes as DeploymentTypesSomeip {
+    typedef MessageText {
+        ScoreProperty481 = 42
+    }
+
+    struct Message {
+        ScoreProperty483 = 42
+        text {
+            ScoreProperty481 = 42
+        }
+    }
+
+    union Payload {
+        ScoreProperty484 = true
+    }
+
+    array MessageList {
+        ScoreProperty347 = 42
+        ScoreProperty346 = 42
+    }
+
+    enumeration Status {
+        ScoreProperty405 = 42
+        Ready {
+            ScoreProperty074 = ScoreValue102
+        }
+    }
+}

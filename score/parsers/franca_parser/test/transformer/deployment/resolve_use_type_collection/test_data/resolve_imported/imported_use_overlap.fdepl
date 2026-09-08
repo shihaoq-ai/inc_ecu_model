@@ -1,0 +1,9 @@
+package example.consumer
+
+import example.* from "imported_definition.fdepl"
+import network.* from "resolve_use_specification.fdepl"
+import example.types.* from "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.Overlap {
+    use shared.library.Reusable
+}

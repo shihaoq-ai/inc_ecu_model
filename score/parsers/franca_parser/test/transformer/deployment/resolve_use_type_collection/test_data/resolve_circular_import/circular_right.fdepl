@@ -1,0 +1,9 @@
+package example.right
+
+import example.left.* from "circular_left.fdepl"
+import network.* from "resolve_use_specification.fdepl"
+import example.types.* from "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as deployments.Right {
+    use example.left.deployments.Left
+}

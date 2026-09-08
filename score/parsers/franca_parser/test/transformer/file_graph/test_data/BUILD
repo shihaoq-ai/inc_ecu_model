@@ -10,11 +10,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
+filegroup(
+    name = "fidl_files",
+    srcs = glob(["*.fidl"]),
     visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
+)
+
+filegroup(
+    name = "direct_import_root",
+    srcs = ["root_imports_types.fidl"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "direct_import_dependency",
+    srcs = ["imported_types.fidl"],
+    visibility = ["//visibility:public"],
 )

@@ -1,0 +1,9 @@
+package example.franca.root
+
+import example.franca.imported.* from "imported_types.fidl"
+
+typeCollection RootTypes {
+    struct RootValue {
+        ImportedTypes.ImportedValue importedValue
+    }
+}

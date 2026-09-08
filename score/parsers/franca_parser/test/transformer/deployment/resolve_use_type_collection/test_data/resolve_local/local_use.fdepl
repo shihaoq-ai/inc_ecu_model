@@ -1,0 +1,30 @@
+package example.local.library
+
+import "resolve_use_specification.fdepl"
+import "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Reusable.Deployment {
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.Short {
+    use Reusable.Deployment
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.Partial {
+    use library.Reusable.Deployment
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.Full {
+    use example.local.library.Reusable.Deployment
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.Overlap {
+    use local.library.Reusable.Deployment
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Reusable {
+}
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.SingleSegment {
+    use Reusable
+}

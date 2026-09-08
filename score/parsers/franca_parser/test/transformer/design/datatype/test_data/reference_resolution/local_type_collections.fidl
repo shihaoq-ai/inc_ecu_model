@@ -1,0 +1,18 @@
+package example.local
+
+typeCollection PrimaryTypes {
+    struct PrimaryPayload {
+        UInt8 value
+    }
+
+    struct LocalReferences {
+        PrimaryPayload from_same_collection
+        SecondaryTypes.SecondaryPayload from_other_collection
+    }
+}
+
+typeCollection SecondaryTypes {
+    struct SecondaryPayload {
+        UInt16 value
+    }
+}

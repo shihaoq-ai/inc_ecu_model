@@ -10,11 +10,5 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
-)
+"""Lark transformers and Franca file graph transformation orchestration."""

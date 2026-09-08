@@ -1,0 +1,19 @@
+package example.deployment
+
+typeCollection DeploymentTypes {
+    typedef MessageText is String
+
+    struct Message {
+        MessageText text
+    }
+
+    union Payload {
+        String text
+    }
+
+    array MessageList of Message
+
+    enumeration Status {
+        Ready
+    }
+}

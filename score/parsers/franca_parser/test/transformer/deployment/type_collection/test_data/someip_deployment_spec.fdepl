@@ -1,0 +1,7 @@
+package network
+
+specification someip {
+    for strings {
+        ScoreProperty481: Integer (default: 42);
+    }
+}

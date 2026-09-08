@@ -10,11 +10,21 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
-)
+"""Parsed Franca source file model."""
+
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from lark import Tree
+
+from score.parsers.franca_parser.model.franca_file import ImportedNamespace
+
+
+@dataclass
+class ParsedFile:
+    """Lark parse tree and imports for one Franca source file."""
+
+    file_path: Path
+    parse_tree: Tree
+    imports: list[ImportedNamespace] = field(default_factory=list)
