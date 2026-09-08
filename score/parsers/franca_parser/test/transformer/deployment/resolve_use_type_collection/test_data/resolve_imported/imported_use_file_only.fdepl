@@ -1,0 +1,12 @@
+package example.consumer
+
+import "imported_definition.fdepl"
+import "resolve_use_specification.fdepl"
+import "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Consumer.FileOnly {
+    use Reusable
+    use library.Reusable
+    use example.shared.library.Reusable
+    use shared.library.Reusable
+}

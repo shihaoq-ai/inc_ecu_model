@@ -10,11 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
+"""Franca FIDL parser and Bazel transformer implementation."""
+
+from score.parsers.franca_parser.parser import FrancaParser
+from score.parsers.franca_parser.transformer.file_graph_transformer import (
+    FrancaFileGraphTransformer,
 )
+
+__all__ = ["FrancaFileGraphTransformer", "FrancaParser"]

@@ -10,11 +10,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "fdepl_type_collection_transformer_test",
+    srcs = ["fdepl_type_collection_transformer_test.py"],
+    data = glob(["test_data/**/*"]),
+    deps = ["//score/parsers/franca_parser"],
 )

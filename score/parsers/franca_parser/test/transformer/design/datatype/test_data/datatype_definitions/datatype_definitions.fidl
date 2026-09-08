@@ -1,0 +1,33 @@
+package example.datatypes
+
+typeCollection Definitions {
+    typedef Speed is UInt32
+
+    enumeration Mode {
+        Initial,
+        ExplicitDecimal = 5,
+        AfterDecimal,
+        Hexadecimal = 0x10,
+        Binary = 0b10001,
+        Negative = -2
+    }
+
+    struct Payload {
+        String label
+        UInt8[8] bytes
+    }
+
+    union Value {
+        Int32 integer_value
+        String text_value
+    }
+
+    array UnboundedArray of UInt8[]
+    array MaximumBoundedArray of UInt8[64]
+    array OpenLowerBoundedArray of UInt8[,64]
+    array BoundedArray of UInt8[1,64]
+
+    map Lookup {
+        String to Payload
+    }
+}

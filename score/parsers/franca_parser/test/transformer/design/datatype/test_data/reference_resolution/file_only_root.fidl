@@ -1,0 +1,20 @@
+package example.fileonly
+
+import "shared_types.fidl"
+import "anonymous_types.fidl"
+
+typeCollection FileOnlyRootTypes {
+    typedef PayloadAlias is SharedTypes.SharedPayload
+
+    struct LocalContainer {
+        LocalItem local_item
+        SharedTypes.SharedPayload shared_payload
+        example.shared.SharedTypes.SharedPayload fully_qualified_payload
+        AnonymousPayload anonymous_payload
+        example.anonymous.AnonymousPayload fully_qualified_anonymous_payload
+    }
+
+    struct LocalItem {
+        UInt8 value
+    }
+}

@@ -1,0 +1,13 @@
+package example.duplicates
+
+typeCollection SharedTypes {
+    struct FirstPayload {
+        UInt8 value
+    }
+}
+
+typeCollection SharedTypes {
+    struct SecondPayload {
+        UInt16 value
+    }
+}

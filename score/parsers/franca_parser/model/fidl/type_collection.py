@@ -10,11 +10,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-load("@rules_python//python:defs.bzl", "py_library")
 
-py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
-)
+"""FIDL type collection parser model."""
+
+from dataclasses import dataclass, field
+
+from score.ecu_model.common.franca_name_types import ValidIdentifier
+
+
+@dataclass
+class TypeCollection:
+    """FIDL type collection and the datatypes it declares."""
+
+    name: ValidIdentifier | None
+    datatypes: list[object] = field(default_factory=list)

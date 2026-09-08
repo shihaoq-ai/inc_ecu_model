@@ -1,0 +1,7 @@
+package example.franca.imported
+
+typeCollection ImportedTypes {
+    struct ImportedValue {
+        UInt32 value
+    }
+}

@@ -1,0 +1,7 @@
+package example.shared
+
+typeCollection LeftTypes {
+    struct SharedPayload {
+        UInt8 source
+    }
+}

@@ -1,0 +1,7 @@
+package example.types
+
+typeCollection ResolveUseTypes {
+    struct Payload {
+        String value
+    }
+}

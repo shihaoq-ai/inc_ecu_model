@@ -1,0 +1,9 @@
+package example.franca.second
+
+import example.franca.shared.* from "shared_types.fidl"
+
+typeCollection SecondTypes {
+    struct SecondValue {
+        SharedTypes.SharedValue sharedValue
+    }
+}

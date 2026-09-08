@@ -1,0 +1,555 @@
+// *******************************************************************************
+// Copyright (c) 2026 Contributors to the Eclipse Foundation
+//
+// See the NOTICE file(s) distributed with this work for additional
+// information regarding copyright ownership.
+//
+// This program and the accompanying materials are made available under the
+// terms of the Apache License Version 2.0 which is available at
+// https://www.apache.org/licenses/LICENSE-2.0
+//
+// SPDX-License-Identifier: Apache-2.0
+// *******************************************************************************
+
+start: fi_model_root
+
+// ************************************************************************************************
+//  MODEL ROOT
+fi_model_root: \
+    "package" fi_fqn \
+    f_imports* \
+    fi_model_elements*
+
+fi_model_elements:      fi_type_collection | fi_interface
+
+// ************************************************************************************************
+//  LANGUAGE KEYWORDS AND VALID IDENTIFIERS
+f_imports:              _import{f_imported_fqn}
+
+fi_id_with_selector:    _id_with_selector{f_valid_id}
+f_valid_id:             _valid_id{fi_keywords}
+f_imported_fqn:         _imported_fqn{fi_fqn}
+fi_fqn:                 _fully_qualified_name{f_valid_id}
+
+fi_keywords: \
+      "array" |  "attribute"
+    | "broadcast" | "Bytebuffer"
+    | "call"
+    | "enumeration" | "error" |  "extends"
+    | "from"
+    | "import" | "in" | "interface"
+    | "key"
+    | "manages" | "major" | "map" | "method" | "minor" | "model"
+    | "namespace" | "noRead" | "noSubscriptions"
+    | "out"
+    | "package"
+    | "readonly" | "respond"
+    | "set" | "signal" | "struct"
+    | "type" | "typedef"
+    | "union" | "update"
+    | "value" | "version"
+
+// ************************************************************************************************
+//  MODEL ELEMENTS
+
+//  TYPE COLLECTIONS
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   A type collection is a (maybe empty) set of user-defined types and constant definitions.
+//  *   Each type collection in Franca has a single identifier name for the collection and an
+//      optional version number (with major/minor scheme).
+fi_type_collection: \
+    f_annotation_block? \
+    "typeCollection" f_valid_id?\
+    "{" \
+        ("version" f_version)? \
+        (fi_constant_def | fi_type)* \
+    "}"
+
+//  INTERFACES
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   An Interface is identified by its fully qualified name and its major version
+//  *   This means there MUST NOT exist more than one interface definition with the same pair of
+//      qualified name and major version.
+//  *   In consequence Franca allows multiple interface definitions with the same qualified name,
+//      if each interface definition has a unique major version.
+
+//  Inheritance:
+//  *   Franca supports interface inheritance to derive a new interface from an existing base
+//      interface and add further elements to the base's members.
+//  *   Only single inheritance is allowed for each interface definition.
+//  *   Interface members are treated by inheritance as follows:
+//      -   Type Definitions:       All types of the base interface are inherited by the derived
+//                                  interface. Redefining of types NOT allowed
+//      -   Constant Definitions:   All constant definitions of the base interface are inherited
+//                                  by the derived interface. Redefining of constants NOT allowed.
+//      -   Attributes:             All attributes of the base interface are inherited by the
+//                                  derived interface. Overloading NOT allowed.
+//      -   Methods:                All methods of the base interface are inherited by the derived
+//                                  interface. Methods can be overloaded, either in the same
+//                                  interface or via inheritance. i.e., methods with the same name
+//                                  can be defined as long as the signature of those methods is
+//                                  different.
+//      -   Broadcasts:             All broadcasts of the base interface are inherited by the
+//                                  derived interface. Broadcasts can be overloaded, either in the
+//                                  same interface or via inheritance. i.e., broadcasts with the
+//                                  same name can be defined as long as the signature of those
+//                                  methods is different.
+
+//  Interfaces managing interfaces:
+//  *   In some IPC mechanisms, e.g. D-Bus, we have the concept of linked interfaces, i.e. a
+//      root bluetooth interface that controls several other interfaces
+//  *   Franca allows to define this association between interfaces using the keyword "manages"
+fi_interface: \
+    f_annotation_block? \
+    "interface" f_valid_id fi_interface_extends? \
+    fi_interface_manages? \
+    "{" \
+        ("version" f_version)? \
+        interface_element* \
+        (fi_contract (fi_constant_def | fi_type)*)? \
+    "}"
+
+fi_interface_extends: "extends" fi_fqn
+
+fi_interface_manages: "manages" fi_fqn ("," fi_fqn)*
+
+interface_element:    fi_attribute
+                    | fi_method
+                    | fi_broadcast
+                    | fi_constant_def
+                    | fi_type
+
+//  ATTRIBUTES
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   An attribute is a shared property of the interface provider, which may be accessed by
+//      clients.
+//  *   Attribute definitions require type and name.
+//  *   Attributes might have primitive types or user-defined types or can be defined as inline,
+//      unnamed arrays
+
+//  Access:
+//  *   By default, clients can read and write the values of attributes.
+//  *   Access can be restricted by specifying the per-attribute flag readonly.
+//  *   It is also possible to disallow the read access to the value of an attribute by specifying
+//      the per-attribute flag noRead.
+//  *   It is also possible to combine the flags noRead and readonly, which prevents explicit read.
+//      and write access. Value updates can then only be received by subscription.
+//  *   Sometimes it's necessary to specify attributes which do not support subscription. This can
+//      be accomplished by adding the flag noSubscriptions to the attribute's definition.
+fi_attribute: \
+    f_annotation_block? \
+    "attribute" fi_element_declaration attr_access_qualifier
+
+attr_access_qualifier: (access_q_readonly | access_q_no_read | access_q_no_subscriptions)*
+access_q_readonly: "readonly"
+access_q_no_read: "noRead"
+access_q_no_subscriptions: "noSubscriptions"
+
+
+//  METHODS
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   A method in a Franca interface is called by one of the clients using the interface.
+//  *   The response will be sent by the server.
+//  *   A method definition will therefore contain a set of in-arguments and a set of
+//      out-arguments, each with own type and name and each of them optional.
+//  *   The component providing an interface will either return a reply with the out-arguments or
+//      reply with an error code as specified by the nameless enumeration defined as part of the
+//      method specification.
+
+//  Errors:
+//  *   If neither out arguments nor error return codes are specified for a method, the server will
+//      by default send an (empty) reply to its client.
+//  *   This behavior can be changed by specifying a fireAndForget flag for the method, which
+//      indicates that the server will not respond at all.
+
+//  Overloading:
+//  *   Franca also allows method overloading
+//  *   This is allowed as long as the method signatures are different, i.e. the sets of combined
+//      in- and out-argument types must be different for each overloaded method.
+//  *   Only the argument types will be part of the signature, not the argument names.
+//  *   In Franca deployment models it is necessary to uniquely reference single methods.
+//  *   In order to distinguish overloaded methods with the same name, the method names can be
+//      extended by selectors
+//  *   Selectors are not part of the method name, but are used to discriminate overloaded methods.
+//  *   The selectors for each group of overloaded methods must be unique.
+fi_method: \
+    f_annotation_block? \
+    "method" fi_id_with_selector fi_fire_and_forget? \
+    "{" \
+        fi_method_input? \
+        fi_method_output? \
+        (\
+            fi_error_comment? \
+            fi_method_error\
+        )? \
+    "}"
+
+fi_error_comment: f_annotation_block
+
+fi_fire_and_forget: "fireAndForget"
+
+fi_method_input: "in" "{" fi_field* "}"
+
+fi_method_output: "out" "{" fi_field* "}"
+
+fi_method_error: "error" (fi_fqn | fi_enumeration_type_body)
+
+//  ERRORS
+// ------------------------------------------------------------------------------------------------
+//  *   If a problem occurs during execution of the method on server side, the server might issue
+//      an error instead of sending the normal reply with its out-arguments.
+//  *   The syntax is the same as with the definition of enumerations, i.e. optional values and
+//      structured comments can be added to each of the enumerators.
+//  *   A reference to a base enumerator can be added using the keyword extends - this allows
+//      inheriting of common error codes
+fi_enumeration_type_body: \
+    ("extends" fi_fqn)? \
+    "{" \
+        (fi_enumerator (","? fi_enumerator)*)? \
+    "}"
+
+//  BROADCASTS
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   A broadcast in a Franca interface is called by the server and will be received by the
+//      clients using the interface.
+//  *   A broadcast definition will contain a set of out-arguments, each with own type and name.
+
+//  Selective Broadcasts:
+//  *   The default communication pattern for broadcasts is that each server-initiated broadcast
+//      will be send to all connected clients.
+//  *   The keyword selective can be given to indicate that the server might send this broadcast
+//      only to a subset of the connected clients
+
+//  Overloading:
+//  *   Also for broadcasts Franca++ allows overloading. The same rules for Methods apply
+fi_broadcast: \
+    f_annotation_block? \
+    "broadcast" fi_id_with_selector "selective"? \
+    "{" \
+        fi_broadcast_output? \
+    "}"
+
+fi_broadcast_output: "out" "{" fi_field* "}"
+
+//  CONTRACTS
+// ------------------------------------------------------------------------------------------------
+//  General:
+//  *   For each Franca interface, a contract might be specified which defines the dynamic behavior
+//      of the interface.
+//  *   Generally, if a contract is part of the interface, all interactions of clients and
+//      providers of this interface have to obey the specification in the contract.
+//  *   A contract is a specification of the interaction of a pair of one client instance and one
+//      provider instance.
+//  *   If multiple clients are connected to one interface on provider side, one instance of the
+//      contract is (conceptually) established for each client.
+
+//  Protocol State Machine
+//  *   In order to specify the dynamic behavior of a Franca interface, a PSM (short for: Protocol
+//      State Machine) is defined which specifies the allowed states of the connection and the
+//      allowed transitions between those states.
+//  *   A PSM can refer to optional state variables which may be declared at the start of a
+//      contract and are statically typed.
+fi_contract: \
+    "contract" "{" \
+        ("vars" "{" \
+            (fi_initialization (";")?)* \
+        "}")? \
+        "PSM" fi_state_graph \
+    "}"
+
+//  *   The state machine starts by defining the initial state of the connection, followed by a
+//      number of allowed states
+fi_state_graph: \
+    "{" \
+        "initial" SIMPLE_NAME \
+        fi_states* \
+    "}"
+
+fi_states: \
+    f_annotation_block? \
+    "state" SIMPLE_NAME "{" \
+        fi_transition* \
+    "}"
+
+//  Events:
+//  *   The Protocol State Machines used for specifying Franca’s interface contracts use events to
+//      specify the transitions from one state to another.
+//  *   A transition will be triggered by one out of a set of events defined below and is denoted
+//      with the arrow-operator.
+//  *   The actual transition can additionally be guarded by a boolean condition.
+//  *   Any guard or action of a transition can refer to the state variables.
+//  *   The boolean guards can check the values of either message arguments, attribute values or
+//      state variable values.
+fi_transition: \
+    "on" fi_trigger fi_guard? "->" SIMPLE_NAME fi_block?
+
+?fi_guard: "[" logical_or_expr "]"
+
+fi_trigger: \
+      ("call"       fi_id_with_selector)   -> call
+    | ("respond"    fi_id_with_selector)   -> respond
+    | ("error"      fi_id_with_selector)   -> error
+    | ("signal"     fi_id_with_selector)   -> signal
+    | ("set"        SIMPLE_NAME)           -> set
+    | ("update"     SIMPLE_NAME)           -> update
+
+//  Actions:
+//  *   For each transition of a PSM, an optional action can be defined.
+//  *   The action consists of a set (block) of statements which will be executed each time the
+//      transition is triggered.
+//  *   The action block might contain conditional statements and assignments, e.g. to manipulate
+//      state variables
+?fi_statement: \
+      fi_assignment
+    | fi_if_statement
+    | fi_block
+
+fi_block:           "{" fi_statement* "}"
+fi_if_statement:    "if" "(" logical_or_expr ")" fi_statement ("else" fi_statement)?
+fi_assignment:      fi_qualified_element_ref "=" logical_or_expr
+
+// ************************************************************************************************
+// TYPE SYSTEM
+
+// A TYPE REFERENCE can point to
+//  * a built-in primitive type
+//  * an imported type, identified by it's qualified name
+//  * an integer type with defined range
+fi_type_ref: \
+      fi_basic_type_id   -> builtin
+    | fi_fqn             -> imported
+    | fi_integer_interval -> interval
+
+// PRIMITIVE DATA TYPES
+// ------------------------------------------------------------------------------------------------
+fi_basic_type_id: \
+      "undefined" -> undefined
+    | "Int8"      -> int8
+    | "UInt8"     -> uint8
+    | "Int16"     -> int16
+    | "UInt16"  -> uint16
+    | "Int32" -> int32
+    | "UInt32" -> uint32
+    | "Int64" -> int64
+    | "UInt64" -> uint64
+    | "Boolean" -> boolean_type
+    | "String" -> string_type
+    | "Float" -> float_type
+    | "Double" -> double_type
+    | "ByteBuffer" -> bytebuffer
+
+fi_integer_interval: \
+    "Integer" ["("(lower_bound | "minInt") "," (upper_bound | "maxInt")")"]
+
+?lower_bound:   E_SIGNED_INTEGER
+?upper_bound:   E_SIGNED_INTEGER
+
+//  COMPLEX DATA TYPES
+// ------------------------------------------------------------------------------------------------
+
+//  Franca++ supports the following complex data types:
+//  * Primitive types
+//  * Enums
+//  * Arrays
+//  * Structs
+//  * Unions
+//  * Maps
+//  * User-defined types
+fi_type: \
+       fi_basic_type_id
+    |  fi_array_type
+    | fi_enumeration_type
+    | fi_struct_type
+    | fi_union_type
+    | fi_map_type
+    | fi_type_def
+
+//  USER-DEFINED TYPES
+//  *   Similar to programming languages a typedef may provide a new name to any existing type.
+fi_type_def: \
+    f_annotation_block? \
+    "public"? "typedef" f_valid_id "is" fi_type_ref
+
+//  ARRAYS
+//  *   Franca supports named arrays as well as anonymous array definitions.
+//  *   Due to the lack of a name, anonymous array definitions can only be used at the place of
+//      their definition, while named arrays may be used for any other type definitions as well.
+fi_array_type: \
+    f_annotation_block? \
+    "public"? "array" f_valid_id "of" fi_type_ref fi_array_dimension?  // array_dmension should be obligatory
+
+//  *   Any array definition may specify exactly ONE dimension.
+//  *   Inside the brackets the minimum and maximum number of allowed elements shall be specified.
+//  *   The minimum size of the array is optional and will be assumed zero if missing.
+fi_array_dimension: "[" ( (lower_dim? "," upper_dim) | upper_dim )? "]"
+
+lower_dim: E_BIGINTEGER
+upper_dim: E_BIGINTEGER
+
+//  ENUMS
+//  *   An enumeration (also called enumerated type) is a data type consisting of a set of named
+//      values called enumerators.
+//  *   Enumeration types support inheritance. This allows to derive a new enumeration type from an
+//      existing one and add further enumerators to the base enumeration.
+//  *   Only single inheritance is allowed for each enumeration.
+fi_enumeration_type: \
+    f_annotation_block? \
+    "public"? "enumeration" f_valid_id ("extends" fi_fqn)? "{" \
+        (fi_enumerator (","? fi_enumerator)*)? \
+    "}"
+
+//  *   Enumerators are identifiers which can be used as unique constants.
+//  *   Literals for the enumerators can be defined optionally as an expression of type integer.
+//  *   It is also possible to specify it with a hexadecimal or binary literal.
+fi_enumerator: \
+    f_annotation_block? \
+    f_valid_id ("=" OPERATOR_UNARY? fi_constant)?
+
+//  STRUCTS
+//  *   A struct is a data type that contains values in fixed number and sequence and typically
+//      indexed by names.
+//  *   The elements of structs are usually called fields or members. Struct types support
+//      inheritance by using the keyword extends.
+//  *   Only single inheritance is allowed for each structure definition - however, a chain or
+//      tree of structures can be build.
+//  *   The root type in a struct inheritance hierarchy may be marked with the polymorphic keyword.
+fi_struct_type: \
+    f_annotation_block? \
+    "public"? "struct" f_valid_id (("extends" fi_fqn) | "polymorphic")? "{" \
+        fi_field* \
+    "}"
+
+//  UNIONS
+//  *   A union is a value that may have any of several representations or formats.
+//  *   Unions can be defined by specifying their possible value types, together with a name for
+//      each representation.
+//  *   As a union will have only one representation at a time, the order of the union's elements
+//      is not important.
+//  *   Member types might be predefined types or user-defined types. This allows e.g. nested
+//      unions, or unions of structures, arrays, typedefs etc. However, No two members of an union
+//      may have the same data type.
+//  *   Just like Struct types, Union types also support inheritance by using the keyword extends.
+fi_union_type: \
+    f_annotation_block? \
+    "public"? "union"  f_valid_id ("extends" fi_fqn)? "{" \
+        fi_field* \
+    "}"
+
+//  MAPS
+//  *   Maps represent key/value-stores and are typically implemented by B-trees or hashes. Franca
+//      map data types specify a key data type and a value data type.
+//  *   Key data types as well as value data types might be primitive or user-defined types which
+//      provide an equality-relation.
+//  *   In some target languages, key data types might be restricted to primitive data types.
+fi_map_type: \
+    f_annotation_block? \
+    "public"? "map" f_valid_id "{" \
+        fi_map_from "to" fi_map_to \
+    "}"
+
+fi_map_from: fi_type_ref
+fi_map_to: fi_type_ref
+//  BUILDING BLOCKS OF TYPED ELEMENTS
+// ------------------------------------------------------------------------------------------------
+//  *   Members may use any available type, e.g. primitive data types, arrays or other structures.
+fi_element_declaration: \
+    fi_type_ref fi_array_dimension? f_valid_id
+
+fi_field: fi_annotated_field | fi_plain_field
+
+fi_annotated_field: \
+    f_annotation_block \
+    fi_element_declaration
+
+fi_plain_field: fi_element_declaration
+
+fi_initialization: fi_element_declaration ("=" fi_initializer_expression)?
+
+// ************************************************************************************************
+//  CONSTANT DEFINITIONS AND INITIALIZERS
+fi_constant_def: \
+    f_annotation_block? \
+    "const" fi_element_declaration "=" fi_initializer_expression
+
+fi_initializer_expression: \
+      logical_or_expr
+    | fi_initializer
+
+fi_initializer: \
+      fi_compound_initializer
+    | fi_bracket_initializer
+
+//  Initializer body for struct and union types
+fi_compound_initializer: \
+    "{" \
+        (fi_field_initializer ("," fi_field_initializer)*)? \
+    "}"
+
+fi_field_initializer: SIMPLE_NAME ":" fi_initializer_expression
+
+//  Initializer body for array and map types
+fi_bracket_initializer: \
+    "[" \
+        (fi_element_initializer ("," fi_element_initializer)*)? \
+    "]"
+
+//  Generic Initializer - for array type initializers, the second element is omitted
+fi_element_initializer: fi_initializer_expression ("=>" fi_initializer_expression)?
+
+//  ARITHMETIC
+// ------------------------------------------------------------------------------------------------
+logical_or_expr:        logical_and_expr    (OPERATOR_OR                logical_and_expr)*
+logical_and_expr:       equality_expr       (OPERATOR_AND               equality_expr)*
+equality_expr:          relational_expr     (OPERATOR_EQUALITY          relational_expr)*
+relational_expr:        additive_expr       (OPERATOR_RATIONAL          additive_expr)*
+additive_expr:          multiplicative_expr (OPERATOR_ADDITIVE          multiplicative_expr)*
+multiplicative_expr:    primary_expression  (OPERATOR_MULTIPLICATIVE    primary_expression)*
+
+?primary_expression: \
+      fi_unary_operation
+    | simple_primary_expression
+
+fi_unary_operation: OPERATOR_UNARY simple_primary_expression
+
+simple_primary_expression: \
+      fi_qualified_element_ref
+    | fi_current_error
+    | fi_method_error_enum_ref
+    | fi_constant
+    | "(" logical_or_expr ")"
+
+fi_current_error:           "errorval"
+fi_method_error_enum_ref:   "errordef" "." SIMPLE_NAME
+
+//  accessing fields of an element is implemented using a C-style arrow-operator
+fi_qualified_element_ref:   fi_fqn ("->" SIMPLE_NAME)*
+
+//  operators and constants
+fi_constant: \
+            E_FLOAT         -> float_literal
+        | E_DOUBLE        -> double_literal
+    | E_BIGINTEGER    -> integer
+    | E_BOOLEAN       -> boolean_literal
+    | ESCAPED_STRING  -> string_literal
+
+OPERATOR_OR:                "||"
+OPERATOR_AND:               "&&"
+OPERATOR_EQUALITY:          "==" | "!="
+OPERATOR_RATIONAL:          "<" | "<=" | ">=" | ">"
+OPERATOR_ADDITIVE:          "+" | "-"
+OPERATOR_MULTIPLICATIVE:    "*" | "/"
+OPERATOR_UNARY:             "!" | "-"
+
+%import franca_com( \
+    f_version, f_annotation_block, f_annotation, _model_root, _valid_id, _id_with_selector, _fully_qualified_name, _imported_fqn, _import, f_import_uri, \
+    WS, WS_INLINE, C_COMMENT, CPP_COMMENT, SIMPLE_NAME, ESCAPED_STRING, E_BOOLEAN, E_FLOAT, E_DOUBLE, E_INTEGER, E_SIGNED_INTEGER, E_BIGINTEGER \
+)
+%ignore(WS)
+%ignore(WS_INLINE)
+%ignore(C_COMMENT)
+%ignore(CPP_COMMENT)

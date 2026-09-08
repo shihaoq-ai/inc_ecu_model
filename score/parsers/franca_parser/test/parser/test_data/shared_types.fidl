@@ -1,0 +1,7 @@
+package example.franca.shared
+
+typeCollection SharedTypes {
+    struct SharedValue {
+        UInt16 value
+    }
+}

@@ -1,0 +1,7 @@
+package example.shared.library
+
+import network.* from "resolve_use_specification.fdepl"
+import example.types.* from "resolve_use_types.fidl"
+
+define network.someip for typeCollection example.types.ResolveUseTypes as Reusable {
+}

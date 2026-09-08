@@ -1,0 +1,55 @@
+package ^system
+specification architecture {
+    for methods {
+        ScoreProperty272				: Integer (default: 42);
+    }
+    for attribute_setters {
+        ScoreProperty011		: Integer (default: 42);
+    }
+    for attribute_getters {
+        ScoreProperty008		: Integer (default: 42);
+    }
+    for attribute_notifiers {
+        ScoreProperty009		: Integer (default: 42);
+        ScoreProperty010	: { ScoreValue015, ScoreValue158 } (default: ScoreValue158);
+    }
+    for enumerations {
+        ScoreProperty069 : {ScoreValue061, ScoreValue237, ScoreValue238, ScoreValue239, ScoreValue108, ScoreValue105, ScoreValue106, ScoreValue107} (optional);
+	}
+	for enumerators {
+        ScoreProperty074 : { ScoreValue023, ScoreValue245, ScoreValue102, ScoreValue148 } (default:ScoreValue148);
+    }
+    for structs {
+    	ScoreProperty493 : Boolean ( default: false );
+    }
+    for devices {
+        ScoreProperty328 : Boolean (optional);
+        ScoreProperty048: Integer (optional);
+        ScoreProperty047: Integer (optional);
+        ScoreProperty050: Integer (optional);
+        ScoreProperty065: {
+            ScoreValue031,
+            ScoreValue082,
+            ScoreValue199,
+            ScoreValue080,
+            ScoreValue072,
+            ScoreValue032,
+            ScoreValue078,
+            ScoreValue112,
+            ScoreValue125,
+            ScoreValue119,
+            ScoreValue117,
+            ScoreValue118,
+            ScoreValue122,
+            ScoreValue123,
+            ScoreValue124,
+            ScoreValue121,
+            ScoreValue120,
+            ScoreValue113,
+            ScoreValue126,
+            ScoreValue229,
+            ScoreValue200,
+            ScoreValue003
+        }[] (optional);  
+	}
+}

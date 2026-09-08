@@ -1,0 +1,60 @@
+package ipnext.driving.cv_minion
+
+import "someip_deployment_spec.fdepl"
+import "score_type_collection_types.fidl"
+
+define network.someip for typeCollection ipnext.cvdn.cv_minion.v1_0.TypeCollectionSkyLandmarks as TypeCollectionSkyLandmarksSomeipStringDeployment_v1_0 {
+    struct OCRText {
+        SomeIpStructLength = 42
+        Character {
+            ScoreProperty481 = 42
+            # {
+                OverwrittenStringLength = 42
+            }
+        }
+        Metadata {
+            #struct {
+                Source {
+                    OverwrittenStringLength = 42
+                }
+            }
+        }
+        PayloadValue {
+            #union {
+                ScoreProperty484 = true
+            }
+        }
+    }
+
+    union Payload {
+        SomeIpUnionLength = 42
+        text {
+            ScoreProperty481 = 42
+        }
+    }
+
+    typedef DisplayText {
+        ScoreProperty481 = 42
+    }
+
+    array byteArray {
+        ScoreProperty247 = 42
+        ScoreProperty246 = 42
+    }
+
+    enumeration SeverityEnum {
+        ScoreProperty069 = ScoreValue238
+        Info {
+            ScoreProperty074 = ScoreValue102
+        }
+    }
+
+    map MetaInfoType {
+        key {
+            MapKeyParam = MapKeyValue
+        }
+        value {
+            MapValueParam = MapValValue
+        }
+    }
+}

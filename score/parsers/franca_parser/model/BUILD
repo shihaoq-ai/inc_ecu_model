@@ -10,11 +10,29 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
 load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
-    name = "ecu_model",
-    srcs = glob(["**/*.py"]),
-    visibility = ["//visibility:public"],
-    deps = ["@pypi//pydantic"],
+    name = "model",
+    srcs = [
+        "__init__.py",
+        "fdepl/__init__.py",
+        "fdepl/definition.py",
+        "fdepl/fdepl_file.py",
+        "fdepl/specification.py",
+        "fdepl/type_collection_deployment.py",
+        "fidl/__init__.py",
+        "fidl/fidl_file.py",
+        "fidl/type_collection.py",
+        "franca_file.py",
+        "parsed_file.py",
+    ],
+    visibility = [
+        "//score/parsers/franca_parser:__pkg__",
+        "//score/parsers/franca_parser:__subpackages__",
+    ],
+    deps = [
+        "//score/ecu_model",
+    ],
 )
