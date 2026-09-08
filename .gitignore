@@ -1,4 +1,3 @@
-.ruff_cache
 .vscode
 bazel-*
 *.pyc
